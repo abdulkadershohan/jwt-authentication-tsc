@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import express, { NextFunction, Request, RequestHandler, Response } from 'express';
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
+import { AuthenticatedRequest } from '../../type/interface';
 import { User } from './model';
 const router = express.Router();
 
@@ -63,6 +64,31 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     catch {
         res.status(401).json({
             "error": "Authetication failed!"
+        });
+    }
+}
+// user profile
+export const profile = async (req: AuthenticatedRequest, res: Response) => {
+    const { email } = req.user;
+    try {
+        const user = await User.findOne({ email }).
+            select('-password').
+            exec();
+        if (!user) {
+            return res.status(401).json({
+                message: 'Access denied',
+            });
+        }
+        res.status(200).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+        });
+
+    }
+    catch (err) {
+        res.status(401).json({
+            message: 'Access denied',
         });
     }
 }

@@ -22,7 +22,7 @@ app.use(
 const PORT = process.env.PORT || 8000;
 
 // application routes
-app.use("/", router);
+app.use("/api", router);
 
 // default error handler
 app.use(errorHandler);

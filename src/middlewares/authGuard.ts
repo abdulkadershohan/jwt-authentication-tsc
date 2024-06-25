@@ -1,10 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
+import createError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { User } from '../moduls/users/model';
-import createError from 'http-errors';
+import { AuthenticatedRequest } from '../type/interface';
 
-export const authGuard = async (req: Request, res: Response, next: NextFunction) => {
+export const authGuard = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     const token = authorization?.split(' ')[1];
     if (!token) return next(createError.Unauthorized("Access denied"));
@@ -15,6 +16,8 @@ export const authGuard = async (req: Request, res: Response, next: NextFunction)
         if (!user) {
             return next("Authentication failure!");
         }
+        // set user in request object
+        req.user = user;
         next();
     }
     catch (err) {

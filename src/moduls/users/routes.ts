@@ -1,11 +1,9 @@
 import express from "express";
-import { login, logout, signup } from "./controller";
 import { authGuard } from "../../middlewares/authGuard";
+import { login, logout, profile, signup } from "./controller";
 
 const router = express.Router();
-router.get("/", authGuard, (req, res) => {
-    res.send("user list");
-});
+router.get("/", authGuard, profile)
 router.post("/signup", signup)
 router.post("/login", login)
 router.post("/logout", logout)
