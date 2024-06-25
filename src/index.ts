@@ -1,16 +1,35 @@
-import dotenv from 'dotenv';
-import express, { Application, Request, Response } from 'express';
-
-//For env File 
-dotenv.config();
-
+import cors from "cors";
+import dotenv from "dotenv";
+import express, { Application } from "express";
+import connectDB from "./config/db.config";
+import errorHandler from "./middlewares/defaultErrorHandler";
+import router from "./routes/routes";
+// Create the express app and  import the type of app from express;
 const app: Application = express();
-const port = process.env.PORT || 8000;
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Welcome to Express & TypeScript Server');
-});
+// Cors
+app.use(cors());
+//configure env;
+dotenv.config();
+// Parser
+app.use(express.json());
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+);
+// Declare The PORT 
+const PORT = process.env.PORT || 8000;
 
-app.listen(port, () => {
-    console.log(`Server is Fire at http://localhost:${port}`);
+// application routes
+app.use("/", router);
+
+// default error handler
+app.use(errorHandler);
+// Listen the server
+app.listen(PORT, async () => {
+    console.log(`🗄️  Server Fire on http:localhost//${PORT}`);
+
+    // Connect To The Database
+    connectDB();
 });
