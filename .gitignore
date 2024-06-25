@@ -23,4 +23,5 @@ Archive.zip
 *.njsproj
 *.sln
 *.sw?
+.env
 
