@@ -95,8 +95,13 @@ export const profile = async (req: AuthenticatedRequest, res: Response) => {
 
 // logout
 export const logout = (req: Request, res: Response) => {
-    res.clearCookie('access_token');
-    res.status(200).json({
-        message: 'Logout successfully',
-    });
+    // Clear the token from client-side by setting an expired token in response
+    res.cookie('access_token', '', { expires: new Date(0) }).send();
+    // res.cookie('access_token', '', {
+    //     httpOnly: true,
+    //     expires: new Date(0),
+    // });
+    // res.status(200).json({
+    //     message: 'Logout successfully',
+    // });
 }
